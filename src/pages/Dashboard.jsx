@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
-import { LogOut, Activity } from 'lucide-react';
+import { LogOut, Activity, Menu, X, Calendar as CalendarIcon } from 'lucide-react';
 
 const BODY_PARTS = [
   { name: 'Chest', icon: '🏃' },
@@ -16,6 +17,7 @@ const BODY_PARTS = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -23,10 +25,37 @@ export default function Dashboard() {
 
   return (
     <div className="container">
+      {/* Side Menu Overlay */}
+      <div 
+        className={`side-menu-overlay ${isMenuOpen ? 'open' : ''}`}
+        onClick={() => setIsMenuOpen(false)}
+      />
+
+      {/* Side Menu */}
+      <div className={`side-menu ${isMenuOpen ? 'open' : ''}`}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '32px' }}>
+          <button onClick={() => setIsMenuOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
+            <X size={28} />
+          </button>
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <button className="side-menu-item" onClick={() => navigate('/calendar')}>
+            <CalendarIcon size={24} color="var(--primary-color)" />
+            History Calendar
+          </button>
+          
+          <button className="side-menu-item" onClick={handleLogout} style={{ color: 'var(--error-color)' }}>
+            <LogOut size={24} color="var(--error-color)" />
+            Logout
+          </button>
+        </div>
+      </div>
+
       <div className="header">
         <h2 className="text-gradient" style={{ marginBottom: 0 }}>My Workouts</h2>
-        <button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-          <LogOut size={24} />
+        <button onClick={() => setIsMenuOpen(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+          <Menu size={28} />
         </button>
       </div>
 

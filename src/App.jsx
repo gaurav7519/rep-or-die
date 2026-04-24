@@ -4,6 +4,7 @@ import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import ExerciseList from './pages/ExerciseList';
 import Tracker from './pages/Tracker';
+import Calendar from './pages/Calendar';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -21,6 +22,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" /> : <Auth />} />
       <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
       <Route path="/exercises/:bodyPart" element={<ProtectedRoute><ExerciseList /></ProtectedRoute>} />
       <Route path="/track/:exerciseId" element={<ProtectedRoute><Tracker /></ProtectedRoute>} />
     </Routes>

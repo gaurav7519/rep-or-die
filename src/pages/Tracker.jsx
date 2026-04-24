@@ -121,11 +121,11 @@ export default function Tracker() {
             <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
                 <label style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Weight</label>
-                <input type="number" step="0.5" placeholder="e.g. 50" value={weight} onChange={e => setWeight(e.target.value)} />
+                <input type="number" step="0.5" inputMode="decimal" placeholder="e.g. 50" value={weight} onChange={e => setWeight(e.target.value)} />
               </div>
               <div>
                 <label style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Reps</label>
-                <input type="number" placeholder="e.g. 10" required value={reps} onChange={e => setReps(e.target.value)} />
+                <input type="number" inputMode="numeric" pattern="[0-9]*" placeholder="e.g. 10" required value={reps} onChange={e => setReps(e.target.value)} />
               </div>
               <div style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
                 <button type="submit" className="btn btn-primary" disabled={saving}>
