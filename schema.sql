@@ -44,9 +44,15 @@ CREATE TABLE workout_logs (
   reps INTEGER NOT NULL,
   weight NUMERIC,
   notes TEXT,
-  date DATE DEFAULT CURRENT_DATE NOT NULL,
+  date DATE DEFAULT (NOW() AT TIME ZONE 'Asia/Kolkata')::DATE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Helper function: returns today's date in IST (Asia/Kolkata)
+CREATE OR REPLACE FUNCTION get_ist_today()
+RETURNS DATE AS $$
+  SELECT (NOW() AT TIME ZONE 'Asia/Kolkata')::DATE;
+$$ LANGUAGE SQL STABLE;
 
 -- Disable RLS for testing since we are using a custom auth table
 ALTER TABLE custom_users DISABLE ROW LEVEL SECURITY;

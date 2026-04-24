@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
 import { useTheme } from '../App';
@@ -52,6 +52,7 @@ function getFlirtyMessage(sex) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
   const { setSetsCount } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,9 +66,10 @@ export default function Dashboard() {
     async function fetchTodayLogs() {
       if (!user) return;
 
-      const d = new Date();
-      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-      const todayStr = d.toISOString().split('T')[0];
+      // Get today's date from DB in IST so client clock never matters
+      const { data: dateRow } = await supabase
+        .rpc('get_ist_today');
+      const todayStr = dateRow;
 
       const { data, error } = await supabase
         .from('workout_logs')
@@ -82,7 +84,7 @@ export default function Dashboard() {
       setLoadingLogs(false);
     }
     fetchTodayLogs();
-  }, [user]);
+  }, [user, location.key]);
 
   const getStatusMessage = () => {
     const count = todayLogs.length;

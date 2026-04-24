@@ -12,30 +12,26 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [istToday, setIstToday] = useState('');
 
   useEffect(() => {
     async function fetchLogs() {
       if (!user) return;
-      
-      // Fetch all logs for the user, joined with exercise name
-      const { data, error } = await supabase
-        .from('workout_logs')
-        .select(`
-          *,
-          exercises (
-            name,
-            default_body_part
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('date', { ascending: false });
 
-      if (!error && data) {
-        setLogs(data);
-      }
+      const [{ data: todayData }, { data, error }] = await Promise.all([
+        supabase.rpc('get_ist_today'),
+        supabase
+          .from('workout_logs')
+          .select(`*, exercises(name, default_body_part)`)
+          .eq('user_id', user.id)
+          .order('date', { ascending: false }),
+      ]);
+
+      if (todayData) setIstToday(todayData);
+      if (!error && data) setLogs(data);
       setLoading(false);
     }
-    
+
     fetchLogs();
   }, [user]);
 
@@ -60,7 +56,7 @@ export default function Calendar() {
            date1.getDate() === date2.getDate();
   };
 
-  const isToday = (date) => isSameDay(date, new Date());
+  const isToday = (date) => istToday === formatDateString(date);
 
   // Group logs by date string (YYYY-MM-DD)
   const logsByDate = useMemo(() => {
@@ -74,11 +70,12 @@ export default function Calendar() {
     return grouped;
   }, [logs]);
 
-  // Format YYYY-MM-DD local time
+  // Format YYYY-MM-DD from local calendar date components (no timezone math needed)
   const formatDateString = (date) => {
-    const d = new Date(date);
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().split('T')[0];
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   };
 
   const renderCalendarDays = () => {

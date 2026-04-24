@@ -60,10 +60,10 @@ export default function Tracker() {
         {
           user_id: user.id,
           exercise_id: exerciseId,
-          sets: 1, // Always 1 set per log now
+          sets: 1,
           reps: parseInt(reps),
           weight: weight ? parseFloat(weight) : null,
-          date: new Date().toISOString().split('T')[0]
+          // date is omitted — DB default uses Asia/Kolkata CURRENT_DATE
         }
       ])
       .select();
