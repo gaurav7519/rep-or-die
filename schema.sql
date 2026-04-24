@@ -1,7 +1,16 @@
--- Drop existing tables to apply the new schema cleanly
+-- Drop existing tables
 DROP TABLE IF EXISTS workout_logs CASCADE;
 DROP TABLE IF EXISTS user_saved_exercises CASCADE;
 DROP TABLE IF EXISTS exercises CASCADE;
+DROP TABLE IF EXISTS custom_users CASCADE;
+
+-- Create custom users table for testing
+CREATE TABLE custom_users (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
 
 -- Create the master exercises table
 CREATE TABLE exercises (
@@ -12,10 +21,10 @@ CREATE TABLE exercises (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Create the user_saved_exercises table (exercises users added to their sections)
+-- Create the user_saved_exercises table 
 CREATE TABLE user_saved_exercises (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
+  user_id UUID REFERENCES custom_users(id) NOT NULL,
   exercise_id UUID REFERENCES exercises(id) NOT NULL,
   body_part TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
@@ -25,7 +34,7 @@ CREATE TABLE user_saved_exercises (
 -- Create the workout_logs table
 CREATE TABLE workout_logs (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
+  user_id UUID REFERENCES custom_users(id) NOT NULL,
   exercise_id UUID REFERENCES exercises(id) NOT NULL,
   sets INTEGER NOT NULL,
   reps INTEGER NOT NULL,
@@ -35,17 +44,11 @@ CREATE TABLE workout_logs (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Enable Row Level Security (RLS)
-ALTER TABLE exercises ENABLE ROW LEVEL SECURITY;
-ALTER TABLE user_saved_exercises ENABLE ROW LEVEL SECURITY;
-ALTER TABLE workout_logs ENABLE ROW LEVEL SECURITY;
-
--- Policies
-CREATE POLICY "Exercises viewable by everyone" ON exercises FOR SELECT USING (true);
-
-CREATE POLICY "Users can manage saved exercises" ON user_saved_exercises FOR ALL USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can manage logs" ON workout_logs FOR ALL USING (auth.uid() = user_id);
+-- Disable RLS for testing since we are using a custom auth table
+ALTER TABLE custom_users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE exercises DISABLE ROW LEVEL SECURITY;
+ALTER TABLE user_saved_exercises DISABLE ROW LEVEL SECURITY;
+ALTER TABLE workout_logs DISABLE ROW LEVEL SECURITY;
 
 -- Insert Seed Data
 INSERT INTO exercises (name, default_body_part, type) VALUES

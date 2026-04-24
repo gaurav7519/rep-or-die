@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../AuthContext';
 import { LogOut, Activity } from 'lucide-react';
 
 const BODY_PARTS = [
@@ -14,9 +15,10 @@ const BODY_PARTS = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    logout();
   };
 
   return (

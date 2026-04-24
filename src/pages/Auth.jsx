@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../AuthContext';
 import { Dumbbell } from 'lucide-react';
 
 export default function Auth() {
@@ -9,6 +10,7 @@ export default function Auth() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const { login } = useAuth();
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -18,18 +20,40 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
+        // Simple custom login
+        const { data, error } = await supabase
+          .from('custom_users')
+          .select('*')
+          .eq('email', email)
+          .eq('password', password)
+          .single();
+          
+        if (error || !data) {
+          throw new Error('Invalid email or password');
+        }
+        login(data);
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
+        // Simple custom signup
+        // First check if email exists
+        const { data: existingUser } = await supabase
+          .from('custom_users')
+          .select('id')
+          .eq('email', email)
+          .single();
+          
+        if (existingUser) {
+          throw new Error('Email already registered');
+        }
+
+        const { data, error } = await supabase
+          .from('custom_users')
+          .insert([{ email, password }])
+          .select()
+          .single();
+          
         if (error) throw error;
-        setMessage('Registration successful! Check your email for the confirmation link.');
+        
+        login(data);
       }
     } catch (err) {
       setError(err.message);
