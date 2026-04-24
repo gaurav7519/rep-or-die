@@ -6,11 +6,11 @@ import { useTheme } from '../App';
 import { LogOut, Activity, Menu, X, Calendar as CalendarIcon, HelpCircle, Copy, Check } from 'lucide-react';
 
 const BODY_PARTS = [
-  { name: 'Chest', icon: '🏃' },
+  { name: 'Chest', icon: '🍊' },
   { name: 'Back', icon: '🦍' },
-  { name: 'Legs', icon: '🦵' },
+  { name: 'Legs', icon: '🍑' },
   { name: 'Shoulders', icon: '💪' },
-  { name: 'Biceps', icon: '🦾' },
+  { name: 'Biceps', icon: '🫦' },
   { name: 'Triceps', icon: '🔩' },
   { name: 'Core', icon: '🧘' }
 ];
