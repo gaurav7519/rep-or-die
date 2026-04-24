@@ -117,7 +117,7 @@ export default function Auth() {
     <div className="container" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '100vh' }}>
       <div className="glass-panel text-center">
         <img src={dontStopImg} alt="Logo" style={{ height: '64px', marginBottom: '16px' }} />
-        <h1 className="text-gradient">rep count</h1>
+        <h1 className="text-gradient">Rep or Die</h1>
         <p className="mb-4">{isLogin ? 'Welcome back! Log in to continue.' : 'Create an account to start tracking.'}</p>
 
         {error && <div className="text-error">{error}</div>}
