@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
 import { ArrowLeft, Plus, History } from 'lucide-react';
+import dontStopImg from '../assets/dont_stop.png';
 
 export default function Tracker() {
   const { exerciseId } = useParams();
@@ -17,6 +18,7 @@ export default function Tracker() {
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
   const [saving, setSaving] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -66,7 +68,9 @@ export default function Tracker() {
 
     if (!error && data) {
       setPreviousLogs([data[0], ...previousLogs]);
-      // Deliberately NOT clearing weight and reps to allow quick logging of the next set
+      setReps('');
+      setWeight('');
+      setShowOptions(true);
     }
     setSaving(false);
   };
@@ -96,24 +100,41 @@ export default function Tracker() {
       </div>
 
       <div className="glass-panel mb-4">
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px' }}>
-          <Plus size={20} color="var(--primary-color)"/> Log a Set
-        </h3>
-        <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <div>
-            <label style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Weight</label>
-            <input type="number" step="0.5" placeholder="e.g. 50" value={weight} onChange={e => setWeight(e.target.value)} />
+        {showOptions ? (
+          <div className="text-center" style={{ padding: '20px 0' }}>
+            <h3 className="mb-4" style={{ color: 'var(--primary-color)' }}>Set Saved!</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+                Stop
+              </button>
+              <button className="btn btn-primary" onClick={() => setShowOptions(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                Don't Stop
+                <img src={dontStopImg} alt="sticker" style={{ height: '24px' }} />
+              </button>
+            </div>
           </div>
-          <div>
-            <label style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Reps</label>
-            <input type="number" placeholder="e.g. 10" required value={reps} onChange={e => setReps(e.target.value)} />
-          </div>
-          <div style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
-            <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? 'Saving...' : 'Save Set'}
-            </button>
-          </div>
-        </form>
+        ) : (
+          <>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px', marginBottom: '16px' }}>
+              <Plus size={20} color="var(--primary-color)"/> Log a Set
+            </h3>
+            <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div>
+                <label style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Weight</label>
+                <input type="number" step="0.5" placeholder="e.g. 50" value={weight} onChange={e => setWeight(e.target.value)} />
+              </div>
+              <div>
+                <label style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Reps</label>
+                <input type="number" placeholder="e.g. 10" required value={reps} onChange={e => setReps(e.target.value)} />
+              </div>
+              <div style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
+                <button type="submit" className="btn btn-primary" disabled={saving}>
+                  {saving ? 'Saving...' : 'Save Set'}
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
 
       <div>
