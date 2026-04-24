@@ -69,7 +69,7 @@ export default function Dashboard() {
         {BODY_PARTS.map((part) => (
           <div 
             key={part.name}
-            className="glass-panel" 
+            className="ios-glass" 
             style={{ textAlign: 'center', cursor: 'pointer', padding: '30px 10px', transition: 'transform 0.2s' }}
             onClick={() => navigate(`/exercises/${part.name}`)}
             onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
