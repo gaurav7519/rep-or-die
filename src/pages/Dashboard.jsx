@@ -15,6 +15,41 @@ const BODY_PARTS = [
   { name: 'Core', icon: '🧘' }
 ];
 
+const FLIRTY_MALE = [
+  "Bro your form is so good it's basically illegal in 12 countries. 😮‍💨",
+  "The bar bends for you. Not because of the weight — it's just nervous. 😏",
+  "You lift like you're trying to impress someone. It's working btw. 👀",
+  "That pump looks dangerous. Someone call a doctor... or don't. 🔥",
+  "Veins out, ego in check, rizz at max. Certified gym rat behavior. 💪",
+  "The mirror keeps staring at you and honestly same. 😳",
+  "You walked in and everyone's PR suddenly got harder to beat. Coincidence? No. 👑",
+  "Sweat never looked this attractive. Please stop, some of us are trying to focus. 😭",
+  "Sir this is a gym not a photoshoot but okay carry on. 📸",
+  "Your dedication is giving main character energy and your physique is giving the sequel. 🎬",
+  "Bro is built different and the dumbbell rack knows it. 🏋️",
+  "If lifting was a love language yours is fluent. We're all jealous fr. 💯",
+];
+
+const FLIRTY_FEMALE = [
+  "Bestie said 'I don't need a gym partner' and then became everyone's gym crush. 💅",
+  "She squats heavier than your standards and looks better doing it. Periodt. 🍑",
+  "The weights are scared and honestly so is everyone else in here. 😤",
+  "Warning: eye contact with this queen during her set may cause loss of focus. 👀",
+  "Running on protein, chaos, and the audacity to look this good sweating. ✨",
+  "Your workout playlist hits different when you walk in. The whole gym felt it. 🎵",
+  "She came. She lifted. She left everyone feeling personally attacked. 💪",
+  "Main character detected. Side characters (everyone else) have been notified. 🎬",
+  "The leg press machine has a crush. Can't blame it honestly. 😏",
+  "Built different, trained harder, still somehow the prettiest thing in the room. 🔥",
+  "Girlie said 'rest day' and her muscles said 'absolutely not.' Respect. 😭",
+  "Your gains are valid, your energy is contagious, and your form is *chef's kiss*. 👩‍🍳",
+];
+
+function getFlirtyMessage(sex) {
+  const pool = sex === 'female' ? FLIRTY_FEMALE : FLIRTY_MALE;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -24,6 +59,7 @@ export default function Dashboard() {
   const [copied, setCopied] = useState(false);
   const [todayLogs, setTodayLogs] = useState([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
+  const [flirtyMsg] = useState(() => getFlirtyMessage(user?.sex));
 
   useEffect(() => {
     async function fetchTodayLogs() {
@@ -99,11 +135,6 @@ export default function Dashboard() {
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <button className="side-menu-item" onClick={() => navigate('/calendar')}>
-            <CalendarIcon size={24} color="var(--primary-color)" />
-            History Calendar
-          </button>
-          
           <button className="side-menu-item" onClick={() => setShowSupport(!showSupport)}>
             <HelpCircle size={24} color="var(--secondary-color)" />
             Support & Suggestion
@@ -130,9 +161,14 @@ export default function Dashboard() {
 
       <div className="header">
         <h2 className="text-gradient" style={{ marginBottom: 0 }}>My Workouts</h2>
-        <button onClick={() => setIsMenuOpen(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-          <Menu size={28} />
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <button onClick={() => navigate('/calendar')} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', lineHeight: 1 }}>
+            <CalendarIcon size={26} />
+          </button>
+          <button onClick={() => setIsMenuOpen(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', lineHeight: 1 }}>
+            <Menu size={26} />
+          </button>
+        </div>
       </div>
 
       <div className="ios-glass mb-4 text-center" style={{ padding: '24px 20px' }}>
@@ -156,9 +192,9 @@ export default function Dashboard() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         {BODY_PARTS.map((part) => (
-          <div 
+          <div
             key={part.name}
-            className="ios-glass" 
+            className="ios-glass"
             style={{ textAlign: 'center', cursor: 'pointer', padding: '30px 10px', transition: 'transform 0.2s' }}
             onClick={() => navigate(`/exercises/${part.name}`)}
             onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
@@ -168,6 +204,12 @@ export default function Dashboard() {
             <div style={{ fontWeight: 600 }}>{part.name}</div>
           </div>
         ))}
+      </div>
+
+      <div className="ios-glass mt-4 text-center" style={{ padding: '20px', marginTop: '16px' }}>
+        <p style={{ fontSize: '15px', color: 'var(--secondary-color)', fontWeight: '600', fontStyle: 'italic', margin: 0, lineHeight: 1.6 }}>
+          {flirtyMsg}
+        </p>
       </div>
     </div>
   );

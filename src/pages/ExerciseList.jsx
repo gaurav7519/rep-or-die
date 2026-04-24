@@ -92,19 +92,37 @@ export default function ExerciseList() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {savedExercises.map((saved) => (
-            <div 
-              key={saved.id} 
+            <div
+              key={saved.id}
               className="glass-panel flex-between"
               style={{ cursor: 'pointer', padding: '16px 20px', transition: 'background 0.2s' }}
               onClick={() => navigate(`/track/${saved.exercises.id}`)}
               onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(31, 40, 51, 0.6)'}
             >
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '18px' }}>{saved.exercises.name}</div>
-                {saved.exercises.type && (
-                  <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{saved.exercises.type}</div>
-                )}
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600, fontSize: '17px', marginBottom: '6px' }}>{saved.exercises.name}</div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {saved.exercises.muscle_focus && (
+                    <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '20px', background: 'rgba(69,162,158,0.15)', color: 'var(--primary-color)', fontWeight: 600 }}>
+                      {saved.exercises.muscle_focus}
+                    </span>
+                  )}
+                  {saved.exercises.exercise_category && (
+                    <span style={{
+                      fontSize: '12px', padding: '2px 8px', borderRadius: '20px', fontWeight: 600,
+                      background: saved.exercises.exercise_category === 'Compound' ? 'rgba(102,252,241,0.12)' : 'rgba(168,85,247,0.12)',
+                      color: saved.exercises.exercise_category === 'Compound' ? 'var(--secondary-color)' : '#c084fc',
+                    }}>
+                      {saved.exercises.exercise_category}
+                    </span>
+                  )}
+                  {saved.exercises.type && (
+                    <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '20px', background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                      {saved.exercises.type}
+                    </span>
+                  )}
+                </div>
               </div>
               <ChevronRight color="var(--primary-color)" />
             </div>
@@ -131,15 +149,35 @@ export default function ExerciseList() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {allExercises.map((ex) => (
-                  <div 
-                    key={ex.id} 
+                  <div
+                    key={ex.id}
                     className="glass-panel flex-between"
                     style={{ padding: '12px 16px', cursor: 'pointer', marginBottom: '8px' }}
                     onClick={() => handleSelectExercise(ex)}
                   >
-                    <div>
-                      <div style={{ fontWeight: 600 }}>{ex.name}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{ex.type}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, marginBottom: '5px' }}>{ex.name}</div>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {ex.muscle_focus && (
+                          <span style={{ fontSize: '11px', padding: '2px 7px', borderRadius: '20px', background: 'rgba(69,162,158,0.15)', color: 'var(--primary-color)', fontWeight: 600 }}>
+                            {ex.muscle_focus}
+                          </span>
+                        )}
+                        {ex.exercise_category && (
+                          <span style={{
+                            fontSize: '11px', padding: '2px 7px', borderRadius: '20px', fontWeight: 600,
+                            background: ex.exercise_category === 'Compound' ? 'rgba(102,252,241,0.12)' : 'rgba(168,85,247,0.12)',
+                            color: ex.exercise_category === 'Compound' ? 'var(--secondary-color)' : '#c084fc',
+                          }}>
+                            {ex.exercise_category}
+                          </span>
+                        )}
+                        {ex.type && (
+                          <span style={{ fontSize: '11px', padding: '2px 7px', borderRadius: '20px', background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                            {ex.type}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <Plus color="var(--primary-color)" size={20} />
                   </div>
