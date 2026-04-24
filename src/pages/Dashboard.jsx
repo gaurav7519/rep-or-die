@@ -106,12 +106,12 @@ export default function Dashboard() {
           
           <button className="side-menu-item" onClick={() => setShowSupport(!showSupport)}>
             <HelpCircle size={24} color="var(--secondary-color)" />
-            Support
+            Support & Suggestion
           </button>
 
           {showSupport && (
             <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px', fontSize: '14px', marginTop: '-8px' }}>
-              <p style={{ marginBottom: '8px', color: 'var(--text-secondary)' }}>For support, please mail:</p>
+              <p style={{ marginBottom: '8px', color: 'var(--text-secondary)' }}>For support or suggestions, mail us:</p>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '6px' }}>
                 <span style={{ color: 'var(--primary-color)', fontFamily: 'var(--font-mono)' }}>gauravmali.ds@gmail.com</span>
                 <button onClick={handleCopyEmail} style={{ background: 'transparent', border: 'none', color: copied ? 'var(--accent)' : 'var(--text-secondary)', cursor: 'pointer' }}>
