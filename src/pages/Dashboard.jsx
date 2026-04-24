@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
+import { useTheme } from '../App';
 import { LogOut, Activity, Menu, X, Calendar as CalendarIcon, HelpCircle, Copy, Check } from 'lucide-react';
 
 const BODY_PARTS = [
@@ -17,6 +18,7 @@ const BODY_PARTS = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { setSetsCount } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSupport, setShowSupport] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -26,7 +28,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchTodayLogs() {
       if (!user) return;
-      
+
       const d = new Date();
       d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
       const todayStr = d.toISOString().split('T')[0];
@@ -39,6 +41,7 @@ export default function Dashboard() {
 
       if (!error && data) {
         setTodayLogs(data);
+        setSetsCount(data.length);
       }
       setLoadingLogs(false);
     }

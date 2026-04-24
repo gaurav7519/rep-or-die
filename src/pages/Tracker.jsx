@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
+import { useTheme } from '../App';
 import { ArrowLeft, Plus, History } from 'lucide-react';
 import dontStopImg from '../assets/dont_stop.png';
 
@@ -9,6 +10,7 @@ export default function Tracker() {
   const { exerciseId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { setsCount, setSetsCount } = useTheme();
   
   const [exercise, setExercise] = useState(null);
   const [previousLogs, setPreviousLogs] = useState([]);
@@ -71,6 +73,7 @@ export default function Tracker() {
       setReps('');
       setWeight('');
       setShowOptions(true);
+      setSetsCount(setsCount + 1);
     }
     setSaving(false);
   };
