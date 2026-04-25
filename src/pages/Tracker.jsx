@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
-import { useTheme } from '../App';
+import { useTheme } from '../ThemeContext';
 import { ArrowLeft, Plus, History } from 'lucide-react';
 import dontStopImg from '../assets/dont_stop.png';
 

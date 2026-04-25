@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../AuthContext';
-import { useTheme } from '../App';
+import { useTheme } from '../ThemeContext';
 import { LogOut, Activity, Menu, X, Calendar as CalendarIcon, HelpCircle, Copy, Check } from 'lucide-react';
 
 const BODY_PARTS = [
