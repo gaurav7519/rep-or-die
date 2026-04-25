@@ -15,23 +15,6 @@ const BODY_PARTS = [
   { name: 'Core', icon: '🧘' }
 ];
 
-const FLIRTY_MALE = [
-  "bro is so delulu he thinks he's not the moment. newsflash — you are the moment. 💀😮‍💨",
-  "ngl ur the type of guy that makes someone go 'i'm not like this normally' and then act fully unhinged. 🫠",
-  "the way ur just built different and don't even know it is sending me into orbit rn. 🚀",
-  "u have absolutely zero business being this rizzy without even trying. turn it down. 😭🔥",
-  "bro said nothing and still said everything. sigma behavior honestly. 😏",
-  "ur giving roman empire. like people think about u way more than they'd ever admit. 👀",
-  "the audacity to have this much drip AND a personality?? pick a struggle bestie. 💧",
-  "u the type to reply 'lol' and ruin someone's whole week. menace. 😤",
-  "ur such a 'screenshot and send to the groupchat' type of fine. not normal. 📲",
-  "no thoughts just vibes and somehow that's more attractive than it has any right to be. 🫶",
-  "bro ate and left no crumbs and didn't even look back. ice cold. we love it. 🧊",
-  "the way ur energy is literally a jumpscare every time. wasn't ready. never ready. 💥",
-  "ur not a red flag ur a roman candle — dangerous, beautiful, and everyone's watching. 🎆",
-  "living in ur timeline rent free and i'm not even mad about it ngl. 🏠💅",
-];
-
 const FLIRTY_FEMALE = [
   "she's so slay it's actually unhinged. who gave u the right bestie. 😭✨",
   "ur the human version of a song that's on repeat at 2am and u don't skip it. ever. 🎵",
@@ -50,8 +33,8 @@ const FLIRTY_FEMALE = [
 ];
 
 function getFlirtyMessage(sex) {
-  const pool = sex === 'female' ? FLIRTY_FEMALE : FLIRTY_MALE;
-  return pool[Math.floor(Math.random() * pool.length)];
+  if (sex !== 'female') return null;
+  return FLIRTY_FEMALE[Math.floor(Math.random() * FLIRTY_FEMALE.length)];
 }
 
 export default function Dashboard() {
@@ -101,16 +84,18 @@ export default function Dashboard() {
         "Skipping the gym today? Touch grass instead. 🌱"
       ];
       return jokes[Math.floor(Math.random() * jokes.length)];
+    } else if (count === 1) {
+      return "One set down, a million to go! Let's get this bread! 🍞";
     } else if (count < 3) {
       return `Ayo, only ${count} sets? Those are rookie numbers. Don't stop now. 😤`;
     } else if (count < 6) {
       return `Solid work. ${count} sets in the bag! Keep the pump going! 🔥`;
     } else if (count < 10) {
-      return "dont stop Daddy 💦";
+      return "dont stop 💦";
     } else if (count < 15) {
       return "Almost...almost there....😍";
     } else {
-      return "keep pumping...i need more😳";
+      return "keep pumping...i need more 😳";
     }
   };
 
@@ -212,11 +197,13 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="ios-glass mt-4 text-center" style={{ padding: '20px', marginTop: '16px' }}>
-        <p style={{ fontSize: '15px', color: 'var(--secondary-color)', fontWeight: '600', fontStyle: 'italic', margin: 0, lineHeight: 1.6 }}>
-          {flirtyMsg}
-        </p>
-      </div>
+      {flirtyMsg && (
+        <div className="ios-glass mt-4 text-center" style={{ padding: '20px', marginTop: '16px' }}>
+          <p style={{ fontSize: '15px', color: 'var(--secondary-color)', fontWeight: '600', fontStyle: 'italic', margin: 0, lineHeight: 1.6 }}>
+            {flirtyMsg}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
