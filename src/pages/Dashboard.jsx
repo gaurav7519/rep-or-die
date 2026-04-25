@@ -106,6 +106,7 @@ export default function Dashboard() {
   };
 
   const handleLogout = () => {
+    setSetsCount(0);
     logout();
   };
 
